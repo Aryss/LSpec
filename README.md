@@ -1,4 +1,4 @@
-zA spectating mutator for UT2004 Duel events. Provides a modern interface for streaming, with extra data that original game does not provide. 
+A spectating mutator for UT2004 Duel events. Provides a modern interface for streaming, with extra data that original game does not have on the client. 
 
 Demo from a slightly earlier version:
 
