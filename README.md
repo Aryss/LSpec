@@ -1,7 +1,8 @@
 A server side spectating mutator for UT2004 Duel events. Provides a modern interface for streaming, with extra data that original game does not provide. 
 
 Demo from a slightly earlier version:
-<iframe width="560" height="315" src="https://www.youtube.com/embed/JJ0yZVjTUEE?rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+[![PREVIEW](https://img.youtube.com/vi/JJ0yZVjTUEE/0.jpg)](https://www.youtube.com/watch?v=JJ0yZVjTUEE&rel=0)
 
 Proper readme to follow, but a few pointers for now:
 - On the server you'll need to add the following to your server.ini:
