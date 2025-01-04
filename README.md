@@ -4,7 +4,7 @@ Demo from a slightly earlier version:
 
 [![PREVIEW](https://img.youtube.com/vi/JJ0yZVjTUEE/0.jpg)](https://www.youtube.com/watch?v=JJ0yZVjTUEE&rel=0)
 
-###Proper readme to follow, but a few pointers for now:
+### Proper readme to follow, but a few pointers for now:
 - On the server you'll need to add the following to your server.ini:
 ```
 [LSpec.MutSpecPlus]
@@ -23,7 +23,7 @@ While it makes joining a server more complex, you can work around this by making
 - The render code in the DuelSpecOverlay.uc uses a lot of local up front caching at the start of the frame. This is done to avoid client crashes as this code is prone to do exactly that if you access a reference to an objected that was removed. This doesn't solve the issue 100% but vastly reduces the chance of it happening. However during normal gameplay the chances of that are minimal
 - Controller code can be safely ignored right now, this is an attempt (so far futile) to make the existing Attract mode cameras to work online.
 
-###Controls
+### Controls
 Y - Swaps left and right player (to keep positions the same between matches), of course swaps all the data as well
 I - Show extra stats: Kills, Suicides, Ping, Packet Loss
 < - Increases/resets left player score. Score is saved locally on the client and persists between matches/sessions
