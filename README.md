@@ -25,11 +25,17 @@ While it makes joining a server more complex, you can work around this by making
 
 ### Controls
 Y - Swaps left and right player (to keep positions the same between matches), of course swaps all the data as well
+
 I - Show extra stats: Kills, Suicides, Ping, Packet Loss
+
 < - Increases/resets left player score. Score is saved locally on the client and persists between matches/sessions
-> - Increases/resets right player score. Score is saved locally on the client and persists between matches/sessions
+
+\> - Increases/resets right player score. Score is saved locally on the client and persists between matches/sessions
+
 ? - Cycles through BO format: off > 3  > 5 > 7. Also saved locally on the client and persists between matches/sessions
+
 P - hides weapon data. Press O to re-enable
+
 O - unused for now, but will cycle weapon info display to other data. Other data is not implemented yet, but swapping is, so if you you hid it by accident press O a couple more times. 
 
 
