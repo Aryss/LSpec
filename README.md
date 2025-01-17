@@ -1,13 +1,18 @@
 A spectating mutator for UT2004 Duel events. Provides a modern interface for streaming, with extra data that original game does not have on the client. 
 
-Demo from a slightly earlier version:
+Demo from a v1.0 version:
 
 [![PREVIEW](https://img.youtube.com/vi/JJ0yZVjTUEE/0.jpg)](https://www.youtube.com/watch?v=JJ0yZVjTUEE&rel=0)
 
 ### Proper readme to follow, but a few pointers for now:
-- On the server you'll need to add the following to your server.ini:
+- On the server you'll need to make the following changes to your server.ini:
+this line to the end of the ServerPackages list under [Engine.GameEngine]:
 ```
-[LSpec.MutSpecPlus]
+ServerPackages=LSpec_v106
+```
+This block to the very end of the ini file:
+```
+[LSpec_v106.MutSpecPlus]
 Pass=your_password
 ```
 Also, while connecting you need to provide a password via console like this:
@@ -21,7 +26,7 @@ While it makes joining a server more complex, you can work around this by making
 - Since this mod also has a client component you do need to have it added to ServerPackages
 - To compile the mod yourself: you will need to have Jost font from GoogleFonts installed in your system, it's used for some of the lines. Or, of course, you can edit the import lines in the DuelSpecOverlay to use something else.
 - The render code in the DuelSpecOverlay.uc uses a lot of local up front caching at the start of the frame. This is done to avoid client crashes as this code is prone to do exactly that if you access a reference to an objected that was removed. This doesn't solve the issue 100% but vastly reduces the chance of it happening. However during normal gameplay the chances of that are minimal
-- Controller code can be safely ignored right now, this is an attempt (so far futile) to make the existing Attract mode cameras to work online.
+- Controller code can be safely ignored right now, this is an attempt (so far futile) to make the existing Attract mode cameras to work online. Class is not currently used in any way.
 
 ### Controls
 Y - Swaps left and right player (to keep positions the same between matches), of course swaps all the data as well
