@@ -25,6 +25,7 @@ var byte Kills;
 var int UDamageTime;
 var int DamageDone;
 var int DamageRecieved;
+var int SelfDamage;
 
 // pickups
 var int UDTimeTotal;
@@ -36,8 +37,6 @@ var byte KegCount;
 var byte ShieldCount;
 var byte BeltCount;
 var byte UDcount;
-
-
 
 // incoming damage tracking
 struct DamageInfo
@@ -60,9 +59,6 @@ var int hasBio,
          hasLG,
          hasSniper;
 
-
-
-
 replication
 {
 	// Things the server should send to the client.
@@ -71,8 +67,8 @@ replication
 		PawnShield, PawnHP, Kills,
         UDamageTime, UDTimeTotal, ShieldTotal,HPTotal,
         VialsCount, KegCount, HPCount, ShieldCount, BeltCount, UDCount,
-        curWeap, hasBio,hasASMD,hasLink,hasMini,hasFlak,hasRocket,hasSniper,
-        DamageLog;
+        curWeap, hasBio,hasASMD,hasLink,hasMini,hasFlak,hasRocket,hasLG,hasSniper,
+        DamageLog, DamageDone, DamageRecieved, SelfDamage;
 }
 
 
@@ -270,6 +266,8 @@ function string GetReadableNameFor(class<DamageType> DamageType){
       return "CORRODED";
    else if (DamageType == class'fell')
       return "FALL";
+   else if (DamageType == class'FellLava')
+      return "LAVA";
    else if (DamageType == class'Gibbed')
       return "GIBBED";
    else if (DamageType == class'DamTypeAssaultBullet')

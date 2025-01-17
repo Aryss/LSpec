@@ -46,10 +46,14 @@ simulated event PostNetBeginPlay()
 
 function MatchStarting(){
   local xPickupBase pickup;
+  local bool bUDDisabled;
   local array<string> tmp1, tmp2;
 
   if (Level.NetMode != NM_Client);
      MatchStartTime = Level.TimeSeconds;
+
+
+  bUDDisabled = !bool(ConsoleCommand("get MutUTComp bEnableDoubleDamage"));
 
   Split(Level,".",tmp1);
   Log(tmp1[0]);
@@ -59,12 +63,12 @@ function MatchStarting(){
     // really ugly hack for the game not cleaning up pickups from the previous map
     Split(pickup, ".",tmp2);
     if (tmp2[0] == tmp1[0]){
-         if ( UDamageCharger(pickup) !=  None ){
+         if ( UDamageCharger(pickup) !=  None && !bUDDisabled){
             Log("Found Pickup"@pickup$", enabling UDamage tracking");
             bHasUD = True;
          }
          if ( ShieldCharger(pickup) !=  None ){
-            Log("Found Pickup"@pickup$", enabling SHield Pack tracking");
+            Log("Found Pickup"@pickup$", enabling Shield Pack tracking");
             bHasArmor = True;
          }
          if ( SuperShieldCharger(pickup) !=  None ){
@@ -157,7 +161,7 @@ simulated event Tick(float DeltaTime)
          ( SpecPRI.bAllow || Level.NetMode == NM_Standalone)
          ) {
       Log("[LSpec] SRI: Overlay is none, trying to spawn");
-      SpecOverlay = DuelSpecOverlay(LocalPlayer.Player.InteractionMaster.AddInteraction("LSpec.DuelSpecOverlay", LocalPlayer.Player));
+      SpecOverlay = DuelSpecOverlay(LocalPlayer.Player.InteractionMaster.AddInteraction("LSpec_v106.DuelSpecOverlay", LocalPlayer.Player));
       Log("[LSpec] Overlay is now:"$SpecOverlay);
       if ( SpecOverlay != None ) {
         SpecOverlay.SpecRI = Self;

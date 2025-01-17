@@ -14,10 +14,11 @@ class DuelSpecOverlay extends Interaction config(User);
 #exec texture import file=Textures\udamage.tga alpha=on lodset=LODSET_Interface
 #exec texture import file=Textures\HP.tga alpha=on lodset=LODSET_Interface
 #exec texture import file=Textures\keg.tga alpha=on lodset=LODSET_Interface
-#exec new truetypefontfactory package=LSpec name="FontTimer60" fontname="Jost" style=600 height=60 USize=512 VSize=128 Antialias=1 Chars=" 0123456789OT:.-+% " Compression=8 DropShadowX=2 DropShadowY=2
-#exec new truetypefontfactory package=LSpec name="FontTimer52" fontname="Jost" style=600 height=50 USize=512 VSize=128 Antialias=1 Chars=" 0123456789OT:.-+% " Compression=8 DropShadowX=2 DropShadowY=2
-#exec new truetypefontfactory package=LSpec name="FontJost21" fontname="Jost" style=500 height=23 USize=512 VSize=256 YPad=2 Antialias=1 Path=. Wildcard=*.rut Chars=" 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz`~!@#$%^&*()_+-=[]\\{}|;:',./?><\"¡«°»¿ÀÁÄÈÉÊËÌÍÑÒÓÖÙÚÜßàáâäçèéêëìíîïñòóôöùúûüæøå" Compression=8
-#exec new truetypefontfactory package=LSpec name="FontTimer36" fontname="Jost" style=400 height=36 USize=512 VSize=128 Antialias=1 Chars=" 0123456789OT:.-+ %" Compression=8 DropShadowX=2 DropShadowY=2 Kerning=2
+#exec new truetypefontfactory package=LSpec_v106 name="FontTimer60" fontname="Jost" style=600 height=60 USize=512 VSize=128 Antialias=1 Chars=" 0123456789OT:.-+% " Compression=8 DropShadowX=2 DropShadowY=2
+#exec new truetypefontfactory package=LSpec_v106 name="FontTimer52" fontname="Jost" style=600 height=50 USize=512 VSize=128 Antialias=1 Chars=" 0123456789OT:.-+% " Compression=8 DropShadowX=2 DropShadowY=2
+#exec new truetypefontfactory package=LSpec_v106 name="FontJost21" fontname="Jost" style=500 height=23 USize=512 VSize=256 YPad=2 Antialias=1 Path=. Wildcard=*.rut Chars=" 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz`~!@#$%^&*()_+-=[]\\{}|;:',./?><\"¡«°»¿ÀÁÄÈÉÊËÌÍÑÒÓÖÙÚÜßàáâäçèéêëìíîïñòóôöùúûüæøå" Compression=8  DropShadowX=2 DropShadowY=2
+#exec new truetypefontfactory package=LSpec_v106 name="FontTimer36" fontname="Jost" style=400 height=36 USize=512 VSize=128 Antialias=1 Chars=" 0123456789OT:.-+ %" Compression=8 DropShadowX=2 DropShadowY=2 Kerning=2
+#exec new truetypefontfactory package=LSpec_v106 name="FontJost12" fontname="Jost" style=500 height=13 USize=512 VSize=128 Antialias=1 Path=. Wildcard=*.rut Chars=" 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz`~!@#$%^&*()_+-=[]\\{}|;:',./?><\"¡«°»¿ÀÁÄÈÉÊËÌÍÑÒÓÖÙÚÜßàáâäçèéêëìíîïñòóôöùúûüæøå" Compression=8 DropShadowX=2 DropShadowY=2
 
 
 var PlayerController PC;
@@ -277,9 +278,10 @@ function PostRender( canvas Canvas )
          if (InfoMode == 1)
             DrawLeftWeapons(Canvas);
          if (InfoMode == 2)
-//            DrawNumericalHPShieldUD(LeftPlayer, Canvas);
-         if (InfoMode == 3)
             DrawLeftPickups(Canvas);
+//            DrawNumericalHPShieldUD(LeftPlayer, Canvas);
+//         if (InfoMode == 3)
+
 
          DrawLeftPlayerDmgLog(Canvas);
       }
@@ -297,9 +299,10 @@ function PostRender( canvas Canvas )
          if (InfoMode == 1)
             DrawRightWeapons(Canvas);
          if (InfoMode == 2)
-//            DrawNumericalHPShieldUD(RightPlayer, Canvas);
-         if (InfoMode == 3)
             DrawRightPickups(Canvas);
+//            DrawNumericalHPShieldUD(RightPlayer, Canvas);
+//         if (InfoMode == 3)
+
 
          DrawRightPlayerDmgLog(Canvas);
       }
@@ -407,31 +410,31 @@ function DrawSeriesScore(Canvas C){
      // first circle
      C.SetPos(PosX - 24,PosY);
      if (ScoreLeft == 0)
-        C.DrawTile(Texture'LSpec.check', 24, 24, 0, 0, 64, 64);
+        C.DrawTile(Texture'LSpec_v106.check', 24, 24, 0, 0, 64, 64);
      if (ScoreLeft > 0)
-        C.DrawTile(Texture'LSpec.check', 24, 24, 0, 64, 64, 64);
+        C.DrawTile(Texture'LSpec_v106.check', 24, 24, 0, 64, 64, 64);
      // 2nd circle
      C.SetPos(PosX-56,PosY);
      if (ScoreLeft <= 1)
-        C.DrawTile(Texture'LSpec.check', 24, 24, 0, 0, 64, 64);
+        C.DrawTile(Texture'LSpec_v106.check', 24, 24, 0, 0, 64, 64);
      if (ScoreLeft > 1)
-        C.DrawTile(Texture'LSpec.check', 24, 24, 0, 64, 64, 64);
+        C.DrawTile(Texture'LSpec_v106.check', 24, 24, 0, 64, 64, 64);
   }
   if (bestOf == 5 || bestOf == 7){
      // third circle
      C.SetPos(PosX-88,PosY);
      if (ScoreLeft <= 2)
-        C.DrawTile(Texture'LSpec.check', 24, 24, 0, 0, 64, 64);
+        C.DrawTile(Texture'LSpec_v106.check', 24, 24, 0, 0, 64, 64);
      if (ScoreLeft > 2)
-        C.DrawTile(Texture'LSpec.check', 24, 24, 0, 64, 64, 64);
+        C.DrawTile(Texture'LSpec_v106.check', 24, 24, 0, 64, 64, 64);
   }
   if (bestOf == 7){
      // fourth circle
      C.SetPos(PosX-120,PosY);
      if (ScoreLeft <= 3)
-        C.DrawTile(Texture'LSpec.check', 24, 24, 0, 0, 64, 64);
+        C.DrawTile(Texture'LSpec_v106.check', 24, 24, 0, 0, 64, 64);
      if (ScoreLeft > 3)
-        C.DrawTile(Texture'LSpec.check', 24, 24, 0, 64, 64, 64);
+        C.DrawTile(Texture'LSpec_v106.check', 24, 24, 0, 64, 64, 64);
   }
 
   // draw right score, from inside to outside
@@ -440,31 +443,31 @@ function DrawSeriesScore(Canvas C){
      // first circle
      C.SetPos(PosX,PosY);
      if (ScoreRight == 0)
-        C.DrawTile(Texture'LSpec.check', 24, 24, 0, 0, 64, 64);
+        C.DrawTile(Texture'LSpec_v106.check', 24, 24, 0, 0, 64, 64);
      if (ScoreRight > 0)
-        C.DrawTile(Texture'LSpec.check', 24, 24, 0, 64, 64, 64);
+        C.DrawTile(Texture'LSpec_v106.check', 24, 24, 0, 64, 64, 64);
      // 2nd circle
      C.SetPos(PosX+32,PosY);
      if (ScoreRight <= 1)
-        C.DrawTile(Texture'LSpec.check', 24, 24, 0, 0, 64, 64);
+        C.DrawTile(Texture'LSpec_v106.check', 24, 24, 0, 0, 64, 64);
      if (ScoreRight > 1)
-        C.DrawTile(Texture'LSpec.check', 24, 24, 0, 64, 64, 64);
+        C.DrawTile(Texture'LSpec_v106.check', 24, 24, 0, 64, 64, 64);
   }
   if (bestOf == 5 || bestOf == 7){
      // third circle
      C.SetPos(PosX+64,PosY);
      if (ScoreRight <= 2)
-        C.DrawTile(Texture'LSpec.check', 24, 24, 0, 0, 64, 64);
+        C.DrawTile(Texture'LSpec_v106.check', 24, 24, 0, 0, 64, 64);
      if (ScoreRight > 2)
-        C.DrawTile(Texture'LSpec.check', 24, 24, 0, 64, 64, 64);
+        C.DrawTile(Texture'LSpec_v106.check', 24, 24, 0, 64, 64, 64);
   }
   if (bestOf == 7){
      // fourth circle
      C.SetPos(PosX+96,PosY);
      if (ScoreRight <= 3)
-        C.DrawTile(Texture'LSpec.check', 24, 24, 0, 0, 64, 64);
+        C.DrawTile(Texture'LSpec_v106.check', 24, 24, 0, 0, 64, 64);
      if (ScoreRight > 3)
-        C.DrawTile(Texture'LSpec.check', 24, 24, 0, 64, 64, 64);
+        C.DrawTile(Texture'LSpec_v106.check', 24, 24, 0, 64, 64, 64);
   }
 
 
@@ -692,13 +695,13 @@ function DrawLeftPlayerHP(Canvas C){
 
       C.SetDrawColor(255,255,255);
       C.SetPos(screenMidX - 133,48);
-      C.DrawTile(Texture'LSpec.hp_shield_bars', -XL, 32, 0, 0, XL, 32);
+      C.DrawTile(Texture'LSpec_v106.hp_shield_bars', -XL, 32, 0, 0, XL, 32);
 
       // drawing extra bar
       if (HP >= 101){
           XL = FClamp((287/99)*Min(HP-100,99),0,287);
           C.SetPos(screenMidX - 396,48);
-          C.DrawTile(Texture'LSpec.hp_shield_bars', -XL, 32, 0, 64, XL, 32);
+          C.DrawTile(Texture'LSpec_v106.hp_shield_bars', -XL, 32, 0, 64, XL, 32);
       }
   }
 }
@@ -727,13 +730,13 @@ function DrawRightPlayerHP(Canvas C){
 
       C.SetDrawColor(255,255,255);
       C.SetPos(screenMidX + 133,48);
-      C.DrawTile(Texture'LSpec.hp_shield_bars', XL, 32, 0, 0, XL, 32);
+      C.DrawTile(Texture'LSpec_v106.hp_shield_bars', XL, 32, 0, 0, XL, 32);
 
       // drawing extra bar
       if ( HP >= 101 ){
           XL = FClamp( ( 287/99 ) * Min( HP-100 ,99 ), 0, 287 );
           C.SetPos(screenMidX + 396,48);
-          C.DrawTile(Texture'LSpec.hp_shield_bars', XL, 32, 0, 64, XL, 32);
+          C.DrawTile(Texture'LSpec_v106.hp_shield_bars', XL, 32, 0, 64, XL, 32);
       }
   }
 }
@@ -762,7 +765,7 @@ function DrawLeftPlayerShield(Canvas C){
 
       C.SetDrawColor(220,220,220);
       C.SetPos(screenMidX - 100,89);
-      C.DrawTile(Texture'LSpec.hp_shield_bars', -XLs, 24, 0, 32, XL, 32);
+      C.DrawTile(Texture'LSpec_v106.hp_shield_bars', -XLs, 24, 0, 32, XL, 32);
    }
 }
 
@@ -790,7 +793,7 @@ function DrawRightPlayerShield(Canvas C){
 
       C.SetDrawColor(220,220,220);
       C.SetPos(screenMidX + 100,89);
-      C.DrawTile(Texture'LSpec.hp_shield_bars', XL*0.75, 24, 0, 32, XL, 32);
+      C.DrawTile(Texture'LSpec_v106.hp_shield_bars', XL*0.75, 24, 0, 32, XL, 32);
   }
 }
 
@@ -842,18 +845,18 @@ function DrawNumericalHPShieldUD(PlayerReplicationInfo Who, Canvas C){
        C.StrLen("199", XL, YL);
        // HP
        C.SetPos(screenMidX + (offsetX - XL - 45), 125);
-       C.DrawIcon( material'LSpec.HP', 0.5 );
+       C.DrawIcon( material'LSpec_v106.HP', 0.5 );
        C.SetPos(screenMidX + (offsetX - XL - 10), 125 + 18 - YL/2);
        C.DrawText(HP);
        // shield
        C.SetPos(screenMidX + (offsetX), 125);
-       C.DrawIcon( material'LSpec.shield', 0.5 );
+       C.DrawIcon( material'LSpec_v106.shield', 0.5 );
        C.SetPos(screenMidX + (offsetX + 37), 125 + 18 - YL/2);
        C.DrawText(Shield);
        //udamage
        if (UDTime > 0){
           C.SetPos(screenMidX + (offsetX + XL + 45), 125);
-          C.DrawIcon( material'LSpec.udamage', 0.5 );
+          C.DrawIcon( material'LSpec_v106.udamage', 0.5 );
           C.SetPos(screenMidX + (offsetX + XL + 85), 125 + 18 - YL/2);
           C.DrawText(UDTime);
        }
@@ -864,18 +867,18 @@ function DrawNumericalHPShieldUD(PlayerReplicationInfo Who, Canvas C){
        //udamage
        if (WhoRI.UDamageTime > 0){
           C.SetPos(screenMidX - (offsetX + XL*2 + 69), 125);
-          C.DrawIcon( material'LSpec.udamage', 0.5 );
+          C.DrawIcon( material'LSpec_v106.udamage', 0.5 );
           C.SetPos(screenMidX - (offsetX + XL*2 + 25), 125 + 18 - YL/2);
           C.DrawText(UDTime);
        }
        // shield
        C.SetPos(screenMidX - (offsetX + XL + 42), 125);
-       C.DrawIcon( material'LSpec.shield', 0.5 );
+       C.DrawIcon( material'LSpec_v106.shield', 0.5 );
        C.SetPos(screenMidX - (offsetX + XL), 125 + 18 - YL/2);
        C.DrawText(Shield);
        // hp
        C.SetPos(screenMidX - (offsetX - 5), 125);
-       C.DrawIcon( material'LSpec.HP', 0.5 );
+       C.DrawIcon( material'LSpec_v106.HP', 0.5 );
        C.SetPos(screenMidX - (offsetX - 40), 125 + 18 - YL/2);
        C.DrawText(HP);
   }
@@ -935,7 +938,7 @@ function DrawPickupTimers(Canvas C){
   // TL X: 143, Y: 74 (Y is between icon and text)
   if (ToNextKeg <= 10 && SpecRI.bHasKeg){
      C.SetPos(PosX - 143, PosY);
-     C.DrawTile(Texture'LSpec.keg', 64, 64, 0, 0, 256, 256);
+     C.DrawTile(Texture'LSpec_v106.keg', 64, 64, 0, 0, 256, 256);
      if (ToNextKeg > 0){
          C.StrLen(int(ToNextKeg),XL, YL);
          C.SetPos(PosX - (111 + XL/2), PosY - YL);
@@ -1363,21 +1366,237 @@ function DrawRightPlayerDmgLog(Canvas C){
 }
 
 function DrawLeftAccuracy(Canvas C);
-function DrawLeftPickups(Canvas C);
+
+function DrawLeftPickups(Canvas C){
+  local LinkedSpecInfo LeftSpecPRI;
+  local float PosX, PosY, XL, YL;
+
+  // ugly local caching attempt to avoid crash if a player leaves midgame
+  local int DamageDone,
+            DamageRecieved,
+            SelfDamage,
+            UDTimeTotal,
+            ShieldTotal,
+            HPTotal,
+            VialsCount;
+
+  local byte HPCount,
+             KegCount,
+             ShieldCount,
+             BeltCount,
+             UDcount;
+
+
+  // set up color and base coords
+  C.SetDrawColor(255,255,255);
+  C.Font = DMGFont;
+  C.StrLen("XXX", XL, YL); // get XL and YL once
+  PosX = 20;
+  PosY = 400;
+
+  LeftSpecPRI = class'LSpecUtil'.static.GetSpecPRI(LeftPLayer);
+
+  DamageDone = LeftSpecPRI.DamageDone;
+  DamageRecieved = LeftSpecPRI.DamageRecieved;
+  SelfDamage = LeftSpecPRI.SelfDamage;
+  UDTimeTotal = LeftSpecPRI.UDTimeTotal;
+  ShieldTotal = LeftSpecPRI.ShieldTotal;
+  HPTotal = LeftSpecPRI.HPTotal;
+  VialsCount = LeftSpecPRI.VialsCount;
+  HPCount = LeftSpecPRI.HPCount;
+  KegCount = LeftSpecPRI.KegCount;
+  ShieldCount = LeftSpecPRI.ShieldCount;
+  BeltCount = LeftSpecPRI.BeltCount;
+  UDcount = LeftSpecPRI.UDcount;
+
+  if (LeftSpecPRI != none){
+     if (DamageDone > 0){
+        C.StrLen("DAMAGE DEALT:"@DamageDone, XL, YL);
+        C.SetPos(PosX, PosY);
+        C.DrawText("DAMAGE DEALT:"@DamageDone);
+        PosY += YL;
+     }
+     if (DamageRecieved > 0){
+        C.StrLen("DAMAGE TAKEN:"@DamageRecieved, XL, YL);
+        C.SetPos(PosX, PosY);
+        C.DrawText("DAMAGE TAKEN:"@DamageRecieved);
+        PosY += YL;
+     }
+     if (SelfDamage > 0){
+        C.StrLen("SELF-DAMAGE:"@SelfDamage, XL, YL);
+        C.SetPos(PosX, PosY);
+        C.DrawText("SELF-DAMAGE:"@SelfDamage);
+        PosY += YL;
+     }
+     if (HPTotal > 0){
+        C.SetPos(PosX, PosY);
+        C.DrawText("HEALTH TOTAL:"@HPTotal);
+        PosY += YL;
+     }
+     if (ShieldTotal > 0){
+        C.SetPos(PosX, PosY);
+        C.DrawText("SHIELD TOTAL:"@ShieldTotal);
+        PosY += YL;
+     }
+     if (KegCount > 0){
+        C.SetPos(PosX, PosY);
+        C.DrawText("100H: x"$KegCount);
+        PosY += YL;
+     }
+     if (HPCount > 0){
+        C.SetPos(PosX, PosY);
+        C.DrawText("25H: x"$HPCount);
+        PosY += YL;
+     }
+     if (VialsCount > 0){
+        C.SetPos(PosX, PosY);
+        C.DrawText("5H: x"$VialsCount);
+        PosY += YL;
+     }
+     if (BeltCount > 0){
+        C.SetPos(PosX, PosY);
+        C.DrawText("100A: x"$BeltCount);
+        PosY += YL;
+     }
+     if (ShieldCount > 0){
+        C.SetPos(PosX, PosY);
+        C.DrawText("50A: x"$ShieldCount);
+        PosY += YL;
+     }
+     if (UDcount > 0){
+        C.SetPos(PosX, PosY);
+        C.DrawText("UD: x"$UDcount);
+     }
+  }
+
+}
+
 function DrawRightAccuracy(Canvas C);
-function DrawRightPickups(Canvas C);
+
+function DrawRightPickups(Canvas C){
+
+  local LinkedSpecInfo RightSpecPRI;
+  local float PosX, PosY, XL, YL;
+
+  // ugly local caching attempt to avoid crash if a player leaves midgame
+  local int DamageDone,
+            DamageRecieved,
+            SelfDamage,
+            UDTimeTotal,
+            ShieldTotal,
+            HPTotal,
+            VialsCount;
+
+  local byte HPCount,
+             KegCount,
+             ShieldCount,
+             BeltCount,
+             UDcount;
+
+
+  // set up color and base coords
+  C.SetDrawColor(255,255,255);
+  C.Font = DMGFont;
+  C.StrLen("XXX", XL, YL); // get XL and YL once
+  PosX = C.SizeX - 20;
+  PosY = 400;
+
+  RightSpecPRI = class'LSpecUtil'.static.GetSpecPRI(RightPlayer);
+
+  DamageDone = RightSpecPRI.DamageDone;
+  DamageRecieved = RightSpecPRI.DamageRecieved;
+  SelfDamage = RightSpecPRI.SelfDamage;
+  UDTimeTotal = RightSpecPRI.UDTimeTotal;
+  ShieldTotal = RightSpecPRI.ShieldTotal;
+  HPTotal = RightSpecPRI.HPTotal;
+  VialsCount = RightSpecPRI.VialsCount;
+  HPCount = RightSpecPRI.HPCount;
+  KegCount = RightSpecPRI.KegCount;
+  ShieldCount = RightSpecPRI.ShieldCount;
+  BeltCount = RightSpecPRI.BeltCount;
+  UDcount = RightSpecPRI.UDcount;
+
+  if (RightSpecPRI != none){
+     if (DamageDone > 0){
+        C.StrLen("DAMAGE DEALT:"@DamageDone, XL, YL);
+        C.SetPos(PosX - XL, PosY);
+        C.DrawText("DAMAGE DEALT:"@DamageDone);
+        PosY += YL;
+     }
+     if (DamageRecieved > 0){
+        C.StrLen("DAMAGE TAKEN:"@DamageRecieved, XL, YL);
+        C.SetPos(PosX - XL, PosY);
+        C.DrawText("DAMAGE TAKEN:"@DamageRecieved);
+        PosY += YL;
+     }
+     if (SelfDamage > 0){
+        C.StrLen("SELF-DAMAGE:"@SelfDamage, XL, YL);
+        C.SetPos(PosX - XL, PosY);
+        C.DrawText("SELF-DAMAGE:"@SelfDamage);
+        PosY += YL;
+     }
+     if (HPTotal > 0){
+        C.StrLen("HEALTH TOTAL:"@HPTotal, XL, YL);
+        C.SetPos(PosX - XL, PosY);
+        C.DrawText("HEALTH TOTAL:"@HPTotal);
+        PosY += YL;
+     }
+     if (ShieldTotal > 0){
+        C.StrLen("SHIELD TOTAL:"@ShieldTotal, XL, YL);
+        C.SetPos(PosX - XL, PosY);
+        C.DrawText("SHIELD TOTAL:"@ShieldTotal);
+        PosY += YL;
+     }
+     if (KegCount > 0){
+        C.StrLen("100H: x"$KegCount, XL, YL);
+        C.SetPos(PosX - XL, PosY);
+        C.DrawText("100H: x"$KegCount);
+        PosY += YL;
+     }
+     if (HPCount > 0){
+        C.StrLen("25H: x"$HPCount, XL, YL);
+        C.SetPos(PosX - XL, PosY);
+        C.DrawText("25H: x"$HPCount);
+        PosY += YL;
+     }
+     if (VialsCount > 0){
+        C.StrLen("5H: x"$VialsCount, XL, YL);
+        C.SetPos(PosX - XL, PosY);
+        C.DrawText("5H: x"$VialsCount);
+        PosY += YL;
+     }
+     if (BeltCount > 0){
+        C.StrLen("100A: x"$BeltCount, XL, YL);
+        C.SetPos(PosX - XL, PosY);
+        C.DrawText("100A: x"$BeltCount);
+        PosY += YL;
+     }
+     if (ShieldCount > 0){
+        C.StrLen("50A: x"$ShieldCount, XL, YL);
+        C.SetPos(PosX - XL, PosY);
+        C.DrawText("50A: x"$ShieldCount);
+        PosY += YL;
+     }
+     if (UDcount > 0){
+        C.StrLen("UD: x"$UDcount, XL, YL);
+        C.SetPos(PosX - XL, PosY);
+        C.DrawText("UD: x"$UDcount);
+     }
+  }
+
+}
 
 DefaultProperties
 {
-  MidFont="LSpec.FontJost21";
-  ClockFont="LSpec.FontTimer52";
+  MidFont="LSpec_v106.FontJost21";
+  ClockFont="LSpec_v106.FontTimer52";
   SmallFont="UT2003Fonts.FontNeuzeit12";
-  BigFont="LSpec.FontTimer36";
+  BigFont="LSpec_v106.FontTimer36";
   PlayerFont="UT2003Fonts.FontEurostile17";
-  ScoreFont="LSpec.FontTimer60";
-  DMGFont="UT2003Fonts.FontEurostile11";
-  bVisible=True
-  bInitialLog=False
+  ScoreFont="LSpec_v106.FontTimer60";
+  DMGFont="LSpec_v106.FontJost12";
+  bVisible=True;
+  bInitialLog=False;
   InfoMode=1;
-  BestOf=7
+  BestOf=7;
 }

@@ -132,6 +132,6 @@ function bool InStrNonCaseSensitive(String S, string S2)
 
 DefaultProperties
 {
- FriendlyName="SpecPlus"
+ FriendlyName="SpecPlus v1.06"
  Pass=""
 }

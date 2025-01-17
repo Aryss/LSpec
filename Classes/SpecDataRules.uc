@@ -101,12 +101,23 @@ function bool PreventDeath(Pawn Killed, Controller Killer, class<DamageType> dam
 // ============================================================================
 function int NetDamage( int OriginalDamage, int Damage, pawn injured, pawn instigatedBy, vector HitLocation, out vector Momentum, class<DamageType> DamageType )
 {
+    local LinkedSpecInfo AttackerPRI, InjuredPRI;
 
-    local LinkedSpecInfo SpecPRI;
-    SpecPRI = class'LSpecUtil'.static.GetSpecPRI(injured.PlayerReplicationInfo);
+    InjuredPRI = class'LSpecUtil'.static.GetSpecPRI(injured.PlayerReplicationInfo);
+    if (instigatedBy != None)
+       AttackerPRI = class'LSpecUtil'.static.GetSpecPRI(instigatedBy.PlayerReplicationInfo);
 
+    InjuredPRI.ProcessDamage(Damage,DamageType,(injured == instigatedby));
 
-    SpecPRI.ProcessDamage(Damage,DamageType,(injured == instigatedby));
+    if (injured == instigatedby){
+      InjuredPRI.SelfDamage += Damage;
+    }
+    else {
+      InjuredPRI.DamageRecieved += Damage;
+
+      if (AttackerPRI != None)
+         AttackerPRI.DamageDone += Damage;
+    }
 
 	if ( NextGameRules != None )
 		return NextGameRules.NetDamage( OriginalDamage,Damage,injured,instigatedBy,HitLocation,Momentum,DamageType );
