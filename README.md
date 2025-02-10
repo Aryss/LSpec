@@ -8,11 +8,11 @@ Demo from a v1.0 version:
 - On the server you'll need to make the following changes to your server.ini:
 this line to the end of the ServerPackages list under [Engine.GameEngine]:
 ```
-ServerPackages=LSpec_v106
+ServerPackages=LSpec_v108
 ```
 This block to the very end of the ini file:
 ```
-[LSpec_v106.MutSpecPlus]
+[LSpec_v108.MutSpecPlus]
 Pass=your_password
 ```
 Also, while connecting you need to provide a password via console like this:
@@ -42,6 +42,14 @@ I - Show extra stats: Kills, Suicides, Ping, Packet Loss
 P - hides weapon data. Press O to re-enable
 
 O - unused for now, but will cycle weapon info display to other data. Other data is not implemented yet, but swapping is, so if you you hid it by accident press O a couple more times. 
+
+### Troubleshooting
+**Overlay doesn't appear. Mutator is loaded and server log says spectator is cleared for access.**
+Make sure the mutator is added to the ServerPackages, otherwise it won't be loaded on the client.
+
+**Overlay doesn't appear. Mutator is loaded but server log says spectator is not cleared for access.**
+This may be caused by some weird symbols in the player name, in one of my test cases player with "|" symbol in the name was failing the key check. Try removing special characters from the spec's Player name.
+
 
 
 
