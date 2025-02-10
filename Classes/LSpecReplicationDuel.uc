@@ -70,7 +70,7 @@ function MatchStarting(){
   bUDDisabled = bUTCompEnabled && !bool(ConsoleCommand("get MutUTComp bEnableDoubleDamage"));
 
   Split(Level,".",tmp1);
-  Log(tmp1[0]);
+//  Log(tmp1[0]);
 
   foreach AllActors( class'xPickupBase', pickup )
   {
@@ -78,19 +78,19 @@ function MatchStarting(){
     Split(pickup, ".",tmp2);
     if (tmp2[0] == tmp1[0]){
          if ( UDamageCharger(pickup) !=  None && !bUDDisabled ){
-            Log("Found Pickup"@pickup$", enabling UDamage tracking");
+//            Log("Found Pickup"@pickup$", enabling UDamage tracking");
             bHasUD = True;
          }
          if ( ShieldCharger(pickup) !=  None ){
-            Log("Found Pickup"@pickup$", enabling Shield Pack tracking");
+//            Log("Found Pickup"@pickup$", enabling Shield Pack tracking");
             bHasArmor = True;
          }
          if ( SuperShieldCharger(pickup) !=  None ){
-            Log("Found Pickup"@pickup$", enabling SuperShield tracking");
+//            Log("Found Pickup"@pickup$", enabling SuperShield tracking");
             bHasBelt = True;
          }
          if ( SuperHealthCharger(pickup) !=  None ){
-            Log("Found Pickup"@pickup$", enabling Keg O'Health tracking");
+//            Log("Found Pickup"@pickup$", enabling Keg O'Health tracking");
             bHasKeg = True;
          }
      }
@@ -146,7 +146,6 @@ simulated function Timer()
    if (Level.NetMode != NM_Client && bHasKeg){
        if (LastKegTime == 9999){ // workaround for the first pickup of the match
           ToNextKeg = 27 - Level.GRI.ElapsedTime;
-          Log("ToNextKeg"@ToNextKeg);
        }
        else
           ToNextKeg = (LastKegTime + 55) - Level.GRI.ElapsedTime;
@@ -155,7 +154,6 @@ simulated function Timer()
    if (Level.NetMode != NM_Client && bHasUD){
        if (LastUDamageTime == 9999){
           ToNextUDamage = 27 - Level.GRI.ElapsedTime;
-          Log("ToNextUDamage"@ToNextUDamage);
        }
        else
           ToNextUDamage = (LastUDamageTime + 82) - Level.GRI.ElapsedTime;
@@ -164,7 +162,6 @@ simulated function Timer()
    if (Level.NetMode != NM_Client && bHasBelt){
        if (LastBeltTime == 9999){
           ToNextBelt = 27 - Level.GRI.ElapsedTime;
-          Log("ToNextBelt"@ToNextBelt);
        }
        else
           ToNextBelt = (LastBeltTime + 55) - Level.GRI.ElapsedTime;
@@ -184,7 +181,7 @@ function Reset(){
    LastUDamageTime = 9999;
    LastArmorTime = 0;
 
-   Log("LSpecReplication was reset");
+//   Log("LSpecReplication was reset");
 
    foreach DynamicActors( class'LinkedSpecInfo', LRI )
    {
