@@ -11,6 +11,10 @@ var int LastKegTime;
 var int LastBeltTime;
 var int LastUDamageTime;
 var int LastArmorTime;
+var int ToNextKeg;
+var int ToNextBelt;
+var int ToNextUDamage;
+var int ToNextArmor;
 var float MatchStartTime;
 var bool bOvertime;
 var bool bHasArmor,
@@ -23,7 +27,7 @@ var DuelSpecOverlay SpecOverlay;
 replication
 {
     reliable if ( bNetDirty && ( Role == ROLE_Authority ) )
-        LastKegTime, LastArmorTime, LastBeltTime, LastUDamageTime,
+        ToNextKeg, ToNextBelt, ToNextUDamage, ToNextArmor,
         bHasArmor, bHasBelt, bHasKeg, bHasUD,
         bOvertime, MatchStartTime;
 }
@@ -52,13 +56,14 @@ function MatchStarting(){
   if (Level.NetMode != NM_Client);
      MatchStartTime = Level.TimeSeconds;
 
+  Reset();
 
   bUDDisabled = !bool(ConsoleCommand("get MutUTComp bEnableDoubleDamage"));
 
   Split(Level,".",tmp1);
   Log(tmp1[0]);
 
-  foreach AllObjects( class'xPickupBase', pickup )
+  foreach AllActors( class'xPickupBase', pickup )
   {
     // really ugly hack for the game not cleaning up pickups from the previous map
     Split(pickup, ".",tmp2);
@@ -80,7 +85,8 @@ function MatchStarting(){
             bHasKeg = True;
          }
      }
-   }
+  }
+
 }
 
 // ============================================================================
@@ -127,14 +133,48 @@ simulated function Timer()
     	}
      }
    }
+
+   if (Level.NetMode != NM_Client && bHasKeg){
+       if (LastKegTime == 9999) // workaround for the first pickup of the match
+          ToNextKeg = ((MatchStartTime + (30*0.916)) - Level.GRI.ElapsedTime)-1;
+       else
+          ToNextKeg = ((LastKegTime + (60*0.916)) - Level.GRI.ElapsedTime)-1;
+   }
+
+   if (Level.NetMode != NM_Client && bHasUD){
+       if (LastUDamageTime == 9999)
+          ToNextUDamage = ((MatchStartTime + (30*0.916)) - Level.GRI.ElapsedTime)-1;
+       else
+          ToNextUDamage = ((LastUDamageTime + (90*0.916)) - Level.GRI.ElapsedTime)-1;
+   }
+
+   if (Level.NetMode != NM_Client && bHasBelt){
+       if (LastBeltTime == 9999)
+          ToNextBelt = ((MatchStartTime + (30*0.916)) - Level.GRI.ElapsedTime)-1;
+       else
+          ToNextBelt = ((LastBeltTime + 55) - Level.GRI.ElapsedTime)-1;
+   }
+
+   if (Level.NetMode != NM_Client && bHasArmor)
+      ToNextArmor = ((LastArmorTime + (30*0.916)) - Level.GRI.ElapsedTime)-1;
+
 }
 
 function Reset(){
+   local LinkedSpecInfo LRI;
+
    bOvertime = false;
    LastKegTime = 9999;
    LastBeltTime = 9999;
    LastUDamageTime = 9999;
    LastArmorTime = 0;
+
+   Log("LSpecReplication was reset");
+
+   foreach DynamicActors( class'LinkedSpecInfo', LRI )
+   {
+     LRI.Reset();
+   }
 }
 
 // ============================================================================
@@ -161,7 +201,7 @@ simulated event Tick(float DeltaTime)
          ( SpecPRI.bAllow || Level.NetMode == NM_Standalone)
          ) {
       Log("[LSpec] SRI: Overlay is none, trying to spawn");
-      SpecOverlay = DuelSpecOverlay(LocalPlayer.Player.InteractionMaster.AddInteraction("LSpec_v106.DuelSpecOverlay", LocalPlayer.Player));
+      SpecOverlay = DuelSpecOverlay(LocalPlayer.Player.InteractionMaster.AddInteraction("LSpec_v108.DuelSpecOverlay", LocalPlayer.Player));
       Log("[LSpec] Overlay is now:"$SpecOverlay);
       if ( SpecOverlay != None ) {
         SpecOverlay.SpecRI = Self;
@@ -228,6 +268,10 @@ LastKegTime = 9999;
 LastBeltTime = 9999;
 LastUDamageTime = 9999;
 LastArmorTime = 0;
+ToNextKeg = 9999;
+ToNextBelt = 9999;
+ToNextUDamage = 9999;
+ToNextArmor = 9999;
 }
 
 

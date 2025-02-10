@@ -14,11 +14,11 @@ class DuelSpecOverlay extends Interaction config(User);
 #exec texture import file=Textures\udamage.tga alpha=on lodset=LODSET_Interface
 #exec texture import file=Textures\HP.tga alpha=on lodset=LODSET_Interface
 #exec texture import file=Textures\keg.tga alpha=on lodset=LODSET_Interface
-#exec new truetypefontfactory package=LSpec_v106 name="FontTimer60" fontname="Jost" style=600 height=60 USize=512 VSize=128 Antialias=1 Chars=" 0123456789OT:.-+% " Compression=8 DropShadowX=2 DropShadowY=2
-#exec new truetypefontfactory package=LSpec_v106 name="FontTimer52" fontname="Jost" style=600 height=50 USize=512 VSize=128 Antialias=1 Chars=" 0123456789OT:.-+% " Compression=8 DropShadowX=2 DropShadowY=2
-#exec new truetypefontfactory package=LSpec_v106 name="FontJost21" fontname="Jost" style=500 height=23 USize=512 VSize=256 YPad=2 Antialias=1 Path=. Wildcard=*.rut Chars=" 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz`~!@#$%^&*()_+-=[]\\{}|;:',./?><\"¡«°»¿ÀÁÄÈÉÊËÌÍÑÒÓÖÙÚÜßàáâäçèéêëìíîïñòóôöùúûüæøå" Compression=8  DropShadowX=2 DropShadowY=2
-#exec new truetypefontfactory package=LSpec_v106 name="FontTimer36" fontname="Jost" style=400 height=36 USize=512 VSize=128 Antialias=1 Chars=" 0123456789OT:.-+ %" Compression=8 DropShadowX=2 DropShadowY=2 Kerning=2
-#exec new truetypefontfactory package=LSpec_v106 name="FontJost12" fontname="Jost" style=500 height=13 USize=512 VSize=128 Antialias=1 Path=. Wildcard=*.rut Chars=" 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz`~!@#$%^&*()_+-=[]\\{}|;:',./?><\"¡«°»¿ÀÁÄÈÉÊËÌÍÑÒÓÖÙÚÜßàáâäçèéêëìíîïñòóôöùúûüæøå" Compression=8 DropShadowX=2 DropShadowY=2
+#exec new truetypefontfactory package=LSpec_v108 name="FontTimer60" fontname="Jost" style=600 height=60 USize=512 VSize=128 Antialias=1 Chars=" 0123456789OT:.-+% " Compression=8 DropShadowX=2 DropShadowY=2
+#exec new truetypefontfactory package=LSpec_v108 name="FontTimer52" fontname="Jost" style=600 height=50 USize=512 VSize=128 Antialias=1 Chars=" 0123456789OT:.-+% " Compression=8 DropShadowX=2 DropShadowY=2
+#exec new truetypefontfactory package=LSpec_v108 name="FontJost21" fontname="Jost" style=500 height=23 USize=512 VSize=256 YPad=2 Antialias=1 Path=. Wildcard=*.rut Chars=" 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz`~!@#$%^&*()_+-=[]\\{}|;:',./?><\"¡«°»¿ÀÁÄÈÉÊËÌÍÑÒÓÖÙÚÜßàáâäçèéêëìíîïñòóôöùúûüæøå" Compression=8  DropShadowX=2 DropShadowY=2
+#exec new truetypefontfactory package=LSpec_v108 name="FontTimer36" fontname="Jost" style=400 height=36 USize=512 VSize=128 Antialias=1 Chars=" 0123456789OT:.-+ %" Compression=8 DropShadowX=2 DropShadowY=2 Kerning=2
+#exec new truetypefontfactory package=LSpec_v108 name="FontJost12" fontname="Jost" style=500 height=13 USize=512 VSize=128 Antialias=1 Path=. Wildcard=*.rut Chars=" 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz`~!@#$%^&*()_+-=[]\\{}|;:',./?><\"¡«°»¿ÀÁÄÈÉÊËÌÍÑÒÓÖÙÚÜßàáâäçèéêëìíîïñòóôöùúûüæøå" Compression=8 DropShadowX=2 DropShadowY=2
 
 
 var PlayerController PC;
@@ -26,6 +26,9 @@ var HUD playerHUD;
 var GameReplicationInfo GRI;
 var LSpecReplicationDuel SpecRI;
 var PlayerReplicationInfo LeftPlayer, RightPlayer;
+
+//var globalconfig array<SpecOverlayPlugin>  ExtraStatsPlugins;
+
 
 var globalconfig Font MidFont,
                       BigFont,
@@ -38,6 +41,10 @@ var globalconfig Font MidFont,
 var float screenMidX;
 var float screenMaxY;
 var float LastInfoSwitch;
+var float ToNextKeg,
+          ToNextUD,
+          ToNextShield,
+          ToNextBelt;
 
 var globalconfig float X1, X2, Y1, Y2; // debug to adjust item positions live without recompiling
 
@@ -73,6 +80,7 @@ event Initialized()
     playerHUD = ViewportOwner.Actor.myHUD;
     GRI = PC.GameReplicationInfo;
     bDisplayOverlay = True;
+//    LoadPlugins();
 }
 
 event NotifyLevelChange()
@@ -281,6 +289,7 @@ function PostRender( canvas Canvas )
             DrawLeftPickups(Canvas);
 //            DrawNumericalHPShieldUD(LeftPlayer, Canvas);
 //         if (InfoMode == 3)
+//            DrawLeftAccuracy(Canvas);
 
 
          DrawLeftPlayerDmgLog(Canvas);
@@ -410,31 +419,31 @@ function DrawSeriesScore(Canvas C){
      // first circle
      C.SetPos(PosX - 24,PosY);
      if (ScoreLeft == 0)
-        C.DrawTile(Texture'LSpec_v106.check', 24, 24, 0, 0, 64, 64);
+        C.DrawTile(Texture'LSpec_v108.check', 24, 24, 0, 0, 64, 64);
      if (ScoreLeft > 0)
-        C.DrawTile(Texture'LSpec_v106.check', 24, 24, 0, 64, 64, 64);
+        C.DrawTile(Texture'LSpec_v108.check', 24, 24, 0, 64, 64, 64);
      // 2nd circle
      C.SetPos(PosX-56,PosY);
      if (ScoreLeft <= 1)
-        C.DrawTile(Texture'LSpec_v106.check', 24, 24, 0, 0, 64, 64);
+        C.DrawTile(Texture'LSpec_v108.check', 24, 24, 0, 0, 64, 64);
      if (ScoreLeft > 1)
-        C.DrawTile(Texture'LSpec_v106.check', 24, 24, 0, 64, 64, 64);
+        C.DrawTile(Texture'LSpec_v108.check', 24, 24, 0, 64, 64, 64);
   }
   if (bestOf == 5 || bestOf == 7){
      // third circle
      C.SetPos(PosX-88,PosY);
      if (ScoreLeft <= 2)
-        C.DrawTile(Texture'LSpec_v106.check', 24, 24, 0, 0, 64, 64);
+        C.DrawTile(Texture'LSpec_v108.check', 24, 24, 0, 0, 64, 64);
      if (ScoreLeft > 2)
-        C.DrawTile(Texture'LSpec_v106.check', 24, 24, 0, 64, 64, 64);
+        C.DrawTile(Texture'LSpec_v108.check', 24, 24, 0, 64, 64, 64);
   }
   if (bestOf == 7){
      // fourth circle
      C.SetPos(PosX-120,PosY);
      if (ScoreLeft <= 3)
-        C.DrawTile(Texture'LSpec_v106.check', 24, 24, 0, 0, 64, 64);
+        C.DrawTile(Texture'LSpec_v108.check', 24, 24, 0, 0, 64, 64);
      if (ScoreLeft > 3)
-        C.DrawTile(Texture'LSpec_v106.check', 24, 24, 0, 64, 64, 64);
+        C.DrawTile(Texture'LSpec_v108.check', 24, 24, 0, 64, 64, 64);
   }
 
   // draw right score, from inside to outside
@@ -443,31 +452,31 @@ function DrawSeriesScore(Canvas C){
      // first circle
      C.SetPos(PosX,PosY);
      if (ScoreRight == 0)
-        C.DrawTile(Texture'LSpec_v106.check', 24, 24, 0, 0, 64, 64);
+        C.DrawTile(Texture'LSpec_v108.check', 24, 24, 0, 0, 64, 64);
      if (ScoreRight > 0)
-        C.DrawTile(Texture'LSpec_v106.check', 24, 24, 0, 64, 64, 64);
+        C.DrawTile(Texture'LSpec_v108.check', 24, 24, 0, 64, 64, 64);
      // 2nd circle
      C.SetPos(PosX+32,PosY);
      if (ScoreRight <= 1)
-        C.DrawTile(Texture'LSpec_v106.check', 24, 24, 0, 0, 64, 64);
+        C.DrawTile(Texture'LSpec_v108.check', 24, 24, 0, 0, 64, 64);
      if (ScoreRight > 1)
-        C.DrawTile(Texture'LSpec_v106.check', 24, 24, 0, 64, 64, 64);
+        C.DrawTile(Texture'LSpec_v108.check', 24, 24, 0, 64, 64, 64);
   }
   if (bestOf == 5 || bestOf == 7){
      // third circle
      C.SetPos(PosX+64,PosY);
      if (ScoreRight <= 2)
-        C.DrawTile(Texture'LSpec_v106.check', 24, 24, 0, 0, 64, 64);
+        C.DrawTile(Texture'LSpec_v108.check', 24, 24, 0, 0, 64, 64);
      if (ScoreRight > 2)
-        C.DrawTile(Texture'LSpec_v106.check', 24, 24, 0, 64, 64, 64);
+        C.DrawTile(Texture'LSpec_v108.check', 24, 24, 0, 64, 64, 64);
   }
   if (bestOf == 7){
      // fourth circle
      C.SetPos(PosX+96,PosY);
      if (ScoreRight <= 3)
-        C.DrawTile(Texture'LSpec_v106.check', 24, 24, 0, 0, 64, 64);
+        C.DrawTile(Texture'LSpec_v108.check', 24, 24, 0, 0, 64, 64);
      if (ScoreRight > 3)
-        C.DrawTile(Texture'LSpec_v106.check', 24, 24, 0, 64, 64, 64);
+        C.DrawTile(Texture'LSpec_v108.check', 24, 24, 0, 64, 64, 64);
   }
 
 
@@ -554,7 +563,7 @@ function DrawLeftPlayerExtraData (Canvas C){
   if (LeftPlayer != None){
      // ping
      C.SetPos(PosX, PosY + YL*2);
-     C.DrawText("PN:"@LeftPlayer.Ping);
+     C.DrawText("PN:"@(LeftPlayer.Ping * 4));
      // PL
      C.SetPos(PosX, PosY + YL*3);
      C.DrawText("PL:"@LeftPlayer.PacketLoss);
@@ -601,7 +610,7 @@ function DrawRightPlayerExtraData (Canvas C){
   if (RightPlayer != None){
      // ping
      C.SetPos(PosX, PosY + YL*2);
-     C.DrawText("PN:"@RightPlayer.Ping);
+     C.DrawText("PN:"@(RightPlayer.Ping * 4));
      // PL
      C.SetPos(PosX, PosY + YL*3);
      C.DrawText("PL:"@RightPlayer.PacketLoss);
@@ -695,13 +704,13 @@ function DrawLeftPlayerHP(Canvas C){
 
       C.SetDrawColor(255,255,255);
       C.SetPos(screenMidX - 133,48);
-      C.DrawTile(Texture'LSpec_v106.hp_shield_bars', -XL, 32, 0, 0, XL, 32);
+      C.DrawTile(Texture'LSpec_v108.hp_shield_bars', -XL, 32, 0, 0, XL, 32);
 
       // drawing extra bar
       if (HP >= 101){
           XL = FClamp((287/99)*Min(HP-100,99),0,287);
           C.SetPos(screenMidX - 396,48);
-          C.DrawTile(Texture'LSpec_v106.hp_shield_bars', -XL, 32, 0, 64, XL, 32);
+          C.DrawTile(Texture'LSpec_v108.hp_shield_bars', -XL, 32, 0, 64, XL, 32);
       }
   }
 }
@@ -730,13 +739,13 @@ function DrawRightPlayerHP(Canvas C){
 
       C.SetDrawColor(255,255,255);
       C.SetPos(screenMidX + 133,48);
-      C.DrawTile(Texture'LSpec_v106.hp_shield_bars', XL, 32, 0, 0, XL, 32);
+      C.DrawTile(Texture'LSpec_v108.hp_shield_bars', XL, 32, 0, 0, XL, 32);
 
       // drawing extra bar
       if ( HP >= 101 ){
           XL = FClamp( ( 287/99 ) * Min( HP-100 ,99 ), 0, 287 );
           C.SetPos(screenMidX + 396,48);
-          C.DrawTile(Texture'LSpec_v106.hp_shield_bars', XL, 32, 0, 64, XL, 32);
+          C.DrawTile(Texture'LSpec_v108.hp_shield_bars', XL, 32, 0, 64, XL, 32);
       }
   }
 }
@@ -765,7 +774,7 @@ function DrawLeftPlayerShield(Canvas C){
 
       C.SetDrawColor(220,220,220);
       C.SetPos(screenMidX - 100,89);
-      C.DrawTile(Texture'LSpec_v106.hp_shield_bars', -XLs, 24, 0, 32, XL, 32);
+      C.DrawTile(Texture'LSpec_v108.hp_shield_bars', -XLs, 24, 0, 32, XL, 32);
    }
 }
 
@@ -793,7 +802,7 @@ function DrawRightPlayerShield(Canvas C){
 
       C.SetDrawColor(220,220,220);
       C.SetPos(screenMidX + 100,89);
-      C.DrawTile(Texture'LSpec_v106.hp_shield_bars', XL*0.75, 24, 0, 32, XL, 32);
+      C.DrawTile(Texture'LSpec_v108.hp_shield_bars', XL*0.75, 24, 0, 32, XL, 32);
   }
 }
 
@@ -845,18 +854,18 @@ function DrawNumericalHPShieldUD(PlayerReplicationInfo Who, Canvas C){
        C.StrLen("199", XL, YL);
        // HP
        C.SetPos(screenMidX + (offsetX - XL - 45), 125);
-       C.DrawIcon( material'LSpec_v106.HP', 0.5 );
+       C.DrawIcon( material'LSpec_v108.HP', 0.5 );
        C.SetPos(screenMidX + (offsetX - XL - 10), 125 + 18 - YL/2);
        C.DrawText(HP);
        // shield
        C.SetPos(screenMidX + (offsetX), 125);
-       C.DrawIcon( material'LSpec_v106.shield', 0.5 );
+       C.DrawIcon( material'LSpec_v108.shield', 0.5 );
        C.SetPos(screenMidX + (offsetX + 37), 125 + 18 - YL/2);
        C.DrawText(Shield);
        //udamage
        if (UDTime > 0){
           C.SetPos(screenMidX + (offsetX + XL + 45), 125);
-          C.DrawIcon( material'LSpec_v106.udamage', 0.5 );
+          C.DrawIcon( material'LSpec_v108.udamage', 0.5 );
           C.SetPos(screenMidX + (offsetX + XL + 85), 125 + 18 - YL/2);
           C.DrawText(UDTime);
        }
@@ -867,18 +876,18 @@ function DrawNumericalHPShieldUD(PlayerReplicationInfo Who, Canvas C){
        //udamage
        if (WhoRI.UDamageTime > 0){
           C.SetPos(screenMidX - (offsetX + XL*2 + 69), 125);
-          C.DrawIcon( material'LSpec_v106.udamage', 0.5 );
+          C.DrawIcon( material'LSpec_v108.udamage', 0.5 );
           C.SetPos(screenMidX - (offsetX + XL*2 + 25), 125 + 18 - YL/2);
           C.DrawText(UDTime);
        }
        // shield
        C.SetPos(screenMidX - (offsetX + XL + 42), 125);
-       C.DrawIcon( material'LSpec_v106.shield', 0.5 );
+       C.DrawIcon( material'LSpec_v108.shield', 0.5 );
        C.SetPos(screenMidX - (offsetX + XL), 125 + 18 - YL/2);
        C.DrawText(Shield);
        // hp
        C.SetPos(screenMidX - (offsetX - 5), 125);
-       C.DrawIcon( material'LSpec_v106.HP', 0.5 );
+       C.DrawIcon( material'LSpec_v108.HP', 0.5 );
        C.SetPos(screenMidX - (offsetX - 40), 125 + 18 - YL/2);
        C.DrawText(HP);
   }
@@ -898,17 +907,9 @@ function DrawNumericalHPShieldUD(PlayerReplicationInfo Who, Canvas C){
 // ============================================================================
 
 function DrawPickupTimers(Canvas C){
-  local float ToNextKeg,
-              ToNextUD,
-              ToNextShield,
-              ToNextBelt,
-              PosX, PosY,
+  local float PosX, PosY,
               XL, YL;
 
-  ToNextKeg = 9999;
-  ToNextUD = 9999;
-  ToNextShield = 9999;
-  ToNextBelt = 9999;
   PosY = C.SizeY - 74;
   PosX = screenMidX; // for easy adjustment
 
@@ -917,28 +918,16 @@ function DrawPickupTimers(Canvas C){
   C.SetDrawColor(255,255,255);
 
   if (SpecRI != None){
-     if (SpecRI.LastKegTime == 9999) // workaround for the first pickup of the match
-        ToNextKeg = ((SpecRI.MatchStartTime + (30*0.916)) - PC.Level.GRI.ElapsedTime)-1;
-     else
-        ToNextKeg = ((SpecRI.LastKegTime + (60*0.916)) - PC.Level.GRI.ElapsedTime)-1;
-
-     if (SpecRI.LastUDamageTime == 9999)
-        ToNextUD = ((SpecRI.MatchStartTime + (30*0.916)) - PC.Level.GRI.ElapsedTime)-1;
-     else
-        ToNextUD = ((SpecRI.LastUDamageTime + (90*0.916)) - PC.Level.GRI.ElapsedTime)-1;
-
-     if (SpecRI.LastBeltTime == 9999)
-        ToNextBelt = ((SpecRI.MatchStartTime + (30*0.916)) - PC.Level.GRI.ElapsedTime)-1;
-     else
-        ToNextBelt = ((SpecRI.LastBeltTime + 55) - PC.Level.GRI.ElapsedTime)-1;
-
-     ToNextShield = ((SpecRI.LastArmorTime + (30*0.916)) - PC.Level.GRI.ElapsedTime)-1;
+     ToNextKeg    = SpecRI.ToNextKeg;
+     ToNextUD     = SpecRI.ToNextUDamage;
+     ToNextBelt   = SpecRI.ToNextBelt;
+     ToNextShield = SpecRI.ToNextArmor;
   }
 
   // TL X: 143, Y: 74 (Y is between icon and text)
-  if (ToNextKeg <= 10 && SpecRI.bHasKeg){
+  if (ToNextKeg <= 10 ){
      C.SetPos(PosX - 143, PosY);
-     C.DrawTile(Texture'LSpec_v106.keg', 64, 64, 0, 0, 256, 256);
+     C.DrawTile(Texture'LSpec_v108.keg', 64, 64, 0, 0, 256, 256);
      if (ToNextKeg > 0){
          C.StrLen(int(ToNextKeg),XL, YL);
          C.SetPos(PosX - (111 + XL/2), PosY - YL);
@@ -951,7 +940,7 @@ function DrawPickupTimers(Canvas C){
      }
   }
   // TL X: 69, Y: 74 (Y is between icon and text)
-  if (ToNextBelt <= 10 && SpecRI.bHasBelt){
+  if (ToNextBelt <= 10){
      C.SetPos(PosX - 69, PosY);
      C.DrawTile(Texture'HudContent.Generic.HUD', 64, 64, 2, 247, 68, 68);
      if (ToNextBelt > 0){
@@ -966,7 +955,7 @@ function DrawPickupTimers(Canvas C){
      }
   }
   // TL X: +5, Y: 74 (Y is between icon and text)
-  if (ToNextShield <= 10 && SpecRI.bHasArmor){
+  if (ToNextShield <= 10){
      C.SetPos(PosX + 14, PosY + 2);  // shield icon is way smaller so have to improvise... X+9, Y+2
      C.DrawTile(Texture'HudContent.Generic.HUD', 45, 58, 124, 166, 45, 58);
      if (ToNextShield > 0){
@@ -982,7 +971,7 @@ function DrawPickupTimers(Canvas C){
   }
 
   // TL X: +79, Y: 74 (Y is between icon and text)
-  if (ToNextUD <= 10 && SpecRI.bHasUD){
+  if (ToNextUD <= 10){
      C.SetPos(PosX + 83, PosY); // also non rectangle, so adjusting, X+4
      C.DrawTile(Texture'HudContent.Generic.HUD', 56, 64, 0, 164, 74, 84);
      if (ToNextUD > 0){
@@ -1006,7 +995,7 @@ function DrawPickupTimers(Canvas C){
 //The weird trick with  making a local copy of all relevant replicated values
 // is to reduce the reads of an outside reference to a minimum and at the
 // beginning of the function. Rendering really hates when a reference it tries
-// to access was GC'ed and results in memory access crash
+// to access is not there and results in memory access crash
 // ============================================================================
 function DrawLeftWeapons(Canvas C){
 
@@ -1588,15 +1577,19 @@ function DrawRightPickups(Canvas C){
 
 DefaultProperties
 {
-  MidFont="LSpec_v106.FontJost21";
-  ClockFont="LSpec_v106.FontTimer52";
+  MidFont="LSpec_v108.FontJost21";
+  ClockFont="LSpec_v108.FontTimer52";
   SmallFont="UT2003Fonts.FontNeuzeit12";
-  BigFont="LSpec_v106.FontTimer36";
+  BigFont="LSpec_v108.FontTimer36";
   PlayerFont="UT2003Fonts.FontEurostile17";
-  ScoreFont="LSpec_v106.FontTimer60";
-  DMGFont="LSpec_v106.FontJost12";
+  ScoreFont="LSpec_v108.FontTimer60";
+  DMGFont="LSpec_v108.FontJost12";
   bVisible=True;
   bInitialLog=False;
   InfoMode=1;
   BestOf=7;
+  ToNextKeg=9999;
+  ToNextUD=9999;
+  ToNextShield=9999;
+  ToNextBelt=9999;
 }

@@ -44,7 +44,7 @@ function ModifyLogin(out string Portal, out string Options)
 
 	bSpectator = ( Level.Game.ParseOption( Options, "SpectatorOnly" ) ~= "1" );
 	PlayerName = Level.Game.ParseOption( Options, "Name" );
-	bAllow = ( Level.Game.ParseOption( Options, "Key" ) ~= Pass );
+	bAllow = ( Level.Game.ParseOption( Options, "Key" ) ~= Pass || Pass == "");
 
 	Log("[LSpec] Processing player login for "$PlayerName);
 
@@ -132,6 +132,6 @@ function bool InStrNonCaseSensitive(String S, string S2)
 
 DefaultProperties
 {
- FriendlyName="SpecPlus v1.06"
+ FriendlyName="SpecPlus v1.08"
  Pass=""
 }

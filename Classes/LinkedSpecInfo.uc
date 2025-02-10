@@ -206,6 +206,10 @@ simulated function Timer()
 
 }
 
+function MatchStarting(){
+   Reset();
+}
+
 function ProcessDamage(int Damage, class<DamageType> DamageType,bool bSelfDamage){
 
   if ( (Level.TimeSeconds - LastDamageTime) < 1.0 && IsContinuous(DamageType) && DamageType == LastDamageType && DamageType != None){
@@ -341,11 +345,15 @@ simulated function Reset(){
   hasLG = -1;
   hasSniper = -1;
   LastDamageTime = 0;
+  DamageDone = 0;
+  DamageRecieved = 0;
+  SelfDamage = 0;
 
   for (i = 0; i < 5; i++){
      DamageLog[i].Damage = 0;
      DamageLog[i].Desc = "";
   }
+  Log("LinkedSpecReplication for"@PRI.PlayerName@"was reset");
 }
 
 function Died(){
