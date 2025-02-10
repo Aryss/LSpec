@@ -41,7 +41,7 @@ I - Show extra stats: Kills, Suicides, Ping, Packet Loss
 
 P - hides weapon data. Press O to re-enable
 
-O - unused for now, but will cycle weapon info display to other data. Other data is not implemented yet, but swapping is, so if you you hid it by accident press O a couple more times. 
+O - Cycles players' weapon info to pickup/damage stats, to other data (last not implemented yet), back to weapon info. 
 
 ### Troubleshooting
 **Overlay doesn't appear. Mutator is loaded and server log says spectator is cleared for access.**
