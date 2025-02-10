@@ -51,14 +51,23 @@ simulated event PostNetBeginPlay()
 function MatchStarting(){
   local xPickupBase pickup;
   local bool bUDDisabled;
+  local bool bUTCompEnabled;
   local array<string> tmp1, tmp2;
+  local Mutator Mut;
+//  local class<GameLoggerReportPlugin> UTCSupport;
+
+  foreach DynamicActors(class'Mutator',Mut)
+  {
+    if (Left(Mut.FriendlyName, 6) ~= "UTComp")
+       bUTCompEnabled = True;
+  }
 
   if (Level.NetMode != NM_Client);
-     MatchStartTime = Level.TimeSeconds;
+     MatchStartTime = Level.GRI.ElapsedTime;
 
   Reset();
 
-  bUDDisabled = !bool(ConsoleCommand("get MutUTComp bEnableDoubleDamage"));
+  bUDDisabled = bUTCompEnabled && !bool(ConsoleCommand("get MutUTComp bEnableDoubleDamage"));
 
   Split(Level,".",tmp1);
   Log(tmp1[0]);
@@ -68,7 +77,7 @@ function MatchStarting(){
     // really ugly hack for the game not cleaning up pickups from the previous map
     Split(pickup, ".",tmp2);
     if (tmp2[0] == tmp1[0]){
-         if ( UDamageCharger(pickup) !=  None && !bUDDisabled){
+         if ( UDamageCharger(pickup) !=  None && !bUDDisabled ){
             Log("Found Pickup"@pickup$", enabling UDamage tracking");
             bHasUD = True;
          }
@@ -135,28 +144,34 @@ simulated function Timer()
    }
 
    if (Level.NetMode != NM_Client && bHasKeg){
-       if (LastKegTime == 9999) // workaround for the first pickup of the match
-          ToNextKeg = ((MatchStartTime + (30*0.916)) - Level.GRI.ElapsedTime)-1;
+       if (LastKegTime == 9999){ // workaround for the first pickup of the match
+          ToNextKeg = 27 - Level.GRI.ElapsedTime;
+          Log("ToNextKeg"@ToNextKeg);
+       }
        else
-          ToNextKeg = ((LastKegTime + (60*0.916)) - Level.GRI.ElapsedTime)-1;
+          ToNextKeg = (LastKegTime + 55) - Level.GRI.ElapsedTime;
    }
 
    if (Level.NetMode != NM_Client && bHasUD){
-       if (LastUDamageTime == 9999)
-          ToNextUDamage = ((MatchStartTime + (30*0.916)) - Level.GRI.ElapsedTime)-1;
+       if (LastUDamageTime == 9999){
+          ToNextUDamage = 27 - Level.GRI.ElapsedTime;
+          Log("ToNextUDamage"@ToNextUDamage);
+       }
        else
-          ToNextUDamage = ((LastUDamageTime + (90*0.916)) - Level.GRI.ElapsedTime)-1;
+          ToNextUDamage = (LastUDamageTime + 82) - Level.GRI.ElapsedTime;
    }
 
    if (Level.NetMode != NM_Client && bHasBelt){
-       if (LastBeltTime == 9999)
-          ToNextBelt = ((MatchStartTime + (30*0.916)) - Level.GRI.ElapsedTime)-1;
+       if (LastBeltTime == 9999){
+          ToNextBelt = 27 - Level.GRI.ElapsedTime;
+          Log("ToNextBelt"@ToNextBelt);
+       }
        else
-          ToNextBelt = ((LastBeltTime + 55) - Level.GRI.ElapsedTime)-1;
+          ToNextBelt = (LastBeltTime + 55) - Level.GRI.ElapsedTime;
    }
 
    if (Level.NetMode != NM_Client && bHasArmor)
-      ToNextArmor = ((LastArmorTime + (30*0.916)) - Level.GRI.ElapsedTime)-1;
+      ToNextArmor = (LastArmorTime + 27.5) - Level.GRI.ElapsedTime;
 
 }
 

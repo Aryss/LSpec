@@ -353,7 +353,7 @@ simulated function Reset(){
      DamageLog[i].Damage = 0;
      DamageLog[i].Desc = "";
   }
-  Log("LinkedSpecReplication for"@PRI.PlayerName@"was reset");
+//  Log("LinkedSpecReplication for"@PRI.PlayerName@"was reset");
 }
 
 function Died(){
