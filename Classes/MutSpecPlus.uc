@@ -8,6 +8,7 @@
 class MutSpecPlus extends Mutator config;
 
 var globalconfig string Pass;
+var string PassDescText;
 var string origcontroller;
 var class<PlayerController> origcclass;
 var LSpecReplicationDuel SpecReplication;
@@ -25,6 +26,36 @@ function PostBeginPlay()
 		Level.Game.GameRulesModifiers = G;
 	else
 		Level.Game.GameRulesModifiers.AddGameRules(G);
+}
+
+static function FillPlayInfo(PlayInfo PlayInfo)
+{
+	Super.FillPlayInfo(PlayInfo);
+
+    PlayInfo.AddSetting("Spec Plus",    		 "Pass",               "Overlay Password",  1, 1,  "Text", "40");
+}
+
+function GetServerDetails(out GameInfo.ServerResponseLine ServerState)
+{
+	local int i;
+
+	Super.GetServerDetails(ServerState);
+    
+    i = ServerState.ServerInfo.Length;
+
+   	ServerState.ServerInfo.Length = i+1;
+	ServerState.ServerInfo[i].Key = "SpecPlus version";
+	ServerState.ServerInfo[i++].Value = "v1.15";
+}
+
+static event string GetDescriptionText(string PropName)
+{
+	switch (PropName)
+	{
+		case "Pass":	return default.PassDescText;
+	}
+
+	return Super.GetDescriptionText(PropName);
 }
 
 function ModifyLogin(out string Portal, out string Options)
@@ -130,8 +161,11 @@ function bool InStrNonCaseSensitive(String S, string S2)
     return false;
 }
 
+
+
 DefaultProperties
 {
- FriendlyName="SpecPlus v1.08"
+ FriendlyName="SpecPlus v1.15"
  Pass=""
+ PassDescText="Overlay Password"
 }

@@ -10,25 +10,34 @@ class LSpecReplicationDuel extends ReplicationInfo;
 var int LastKegTime;
 var int LastBeltTime;
 var int LastUDamageTime;
-var int LastArmorTime;
+var int LastArmorTimeA,
+        LastArmorTimeB,
+        LastArmorTimeC;
 var int ToNextKeg;
 var int ToNextBelt;
 var int ToNextUDamage;
-var int ToNextArmor;
+var int ToNextArmorA,
+        ToNextArmorB,
+        ToNextArmorC;
 var float MatchStartTime;
 var bool bOvertime;
-var bool bHasArmor,
+var bool bHasArmorA,
+         bHasArmorB,
+         bHasArmorC,
          bHasBelt,
          bHasKeg,
          bHasUD;
 var PlayerController LocalPlayer;
 var DuelSpecOverlay SpecOverlay;
+var ShieldPack  ShieldPackA,
+                ShieldPackB,
+                ShieldPackC;
 
 replication
 {
     reliable if ( bNetDirty && ( Role == ROLE_Authority ) )
-        ToNextKeg, ToNextBelt, ToNextUDamage, ToNextArmor,
-        bHasArmor, bHasBelt, bHasKeg, bHasUD,
+        ToNextKeg, ToNextBelt, ToNextUDamage, ToNextArmorA, ToNextArmorB, ToNextArmorC,
+        bHasArmorA, bHasArmorB, bHasArmorC, bHasBelt, bHasKeg, bHasUD,
         bOvertime, MatchStartTime;
 }
 
@@ -54,7 +63,6 @@ function MatchStarting(){
   local bool bUTCompEnabled;
   local array<string> tmp1, tmp2;
   local Mutator Mut;
-//  local class<GameLoggerReportPlugin> UTCSupport;
 
   foreach DynamicActors(class'Mutator',Mut)
   {
@@ -70,27 +78,41 @@ function MatchStarting(){
   bUDDisabled = bUTCompEnabled && !bool(ConsoleCommand("get MutUTComp bEnableDoubleDamage"));
 
   Split(Level,".",tmp1);
-//  Log(tmp1[0]);
 
   foreach AllActors( class'xPickupBase', pickup )
   {
     // really ugly hack for the game not cleaning up pickups from the previous map
     Split(pickup, ".",tmp2);
     if (tmp2[0] == tmp1[0]){
+    
+//         Log("[LSpec] Found pickup:"@pickup);
          if ( UDamageCharger(pickup) !=  None && !bUDDisabled ){
-//            Log("Found Pickup"@pickup$", enabling UDamage tracking");
             bHasUD = True;
          }
          if ( ShieldCharger(pickup) !=  None ){
-//            Log("Found Pickup"@pickup$", enabling Shield Pack tracking");
-            bHasArmor = True;
+            if ( ShieldPack(ShieldCharger(pickup).myPickup).ShieldAmount == 50){
+                if (bHasArmorA){
+                    bHasArmorB = True;
+                    ShieldPackB = ShieldPack(ShieldCharger(pickup).myPickup);
+//                    Log("[LSpec] ShieldPackB set to Shield Pack"@pickup@"with ShieldAmount of"@ShieldPack(ShieldCharger(pickup).myPickup).ShieldAmount);
+                }
+                else {
+                    bHasArmorA = True;
+                    ShieldPackA = ShieldPack(ShieldCharger(pickup).myPickup);
+//                    Log("[LSpec] ShieldPackA set to Shield Pack"@pickup@"with ShieldAmount of"@ShieldPack(ShieldCharger(pickup).myPickup).ShieldAmount);
+                }
+            }                
+         }
+         // hate the hack, but there's no other way to catch the 25A pickups
+         if ((Left(tmp2[1], 19) == "MediumShieldCharger" || Left(tmp2[1], 21) == "GameTypePickupCharger") && ShieldPack(pickup.myPickup) != None){
+                bHasArmorC = True;
+                ShieldPackC = ShieldPack(pickup.myPickup);
+//                Log("[LSpec] ShieldPackC set to Shield Pack"@pickup@" with ShieldAmount of "@ShieldPack(pickup.myPickup).ShieldAmount );
          }
          if ( SuperShieldCharger(pickup) !=  None ){
-//            Log("Found Pickup"@pickup$", enabling SuperShield tracking");
             bHasBelt = True;
          }
          if ( SuperHealthCharger(pickup) !=  None ){
-//            Log("Found Pickup"@pickup$", enabling Keg O'Health tracking");
             bHasKeg = True;
          }
      }
@@ -114,34 +136,38 @@ simulated function Timer()
      bOvertime = Level.Game.bOverTime;
   }
 
-  if (SpecOverlay != None){
-     if (SpecOverlay.LeftPlayer == None)
-     {
-    	for (i = 0; i < LocalPlayer.GameReplicationInfo.PRIArray.Length; i++)
-    	{
-			if ( !LocalPlayer.GameReplicationInfo.PRIArray[i].bOnlySpectator &&
-                 LocalPlayer.GameReplicationInfo.PRIArray[i] != SpecOverlay.RightPlayer
-                 )
-    		{
-                 SpecOverlay.LeftPlayer = LocalPlayer.GameReplicationInfo.PRIArray[i];
-                 break;
-    		}
-    	}
-     }
-     if (SpecOverlay.RightPlayer == None)
-     {
-    	for (i = 0; i < LocalPlayer.GameReplicationInfo.PRIArray.Length; i++)
-    	{
-			if ( !LocalPlayer.GameReplicationInfo.PRIArray[i].bOnlySpectator &&
-                 LocalPlayer.GameReplicationInfo.PRIArray[i] != SpecOverlay.LeftPlayer
-                 )
-    		{
-                 SpecOverlay.RightPlayer = LocalPlayer.GameReplicationInfo.PRIArray[i];
-                 break;
-    		}
-    	}
-     }
+  if (Level.NetMode == NM_Client || Level.NetMode == NM_Standalone){
+      if (SpecOverlay != None){
+         if (SpecOverlay.LeftPlayer == None)
+         {
+        	for (i = 0; i < LocalPlayer.GameReplicationInfo.PRIArray.Length; i++)
+        	{
+    			if ( !LocalPlayer.GameReplicationInfo.PRIArray[i].bOnlySpectator &&
+                     LocalPlayer.GameReplicationInfo.PRIArray[i] != SpecOverlay.RightPlayer
+                     )
+        		{
+                     SpecOverlay.LeftPlayer = LocalPlayer.GameReplicationInfo.PRIArray[i];
+                     break;
+        		}
+        	}
+         }
+         if (SpecOverlay.RightPlayer == None)
+         {
+        	for (i = 0; i < LocalPlayer.GameReplicationInfo.PRIArray.Length; i++)
+        	{
+    			if ( !LocalPlayer.GameReplicationInfo.PRIArray[i].bOnlySpectator &&
+                     LocalPlayer.GameReplicationInfo.PRIArray[i] != SpecOverlay.LeftPlayer
+                     )
+        		{
+                     SpecOverlay.RightPlayer = LocalPlayer.GameReplicationInfo.PRIArray[i];
+                     break;
+        		}
+        	}
+         }
+       }
+
    }
+    
 
    if (Level.NetMode != NM_Client && bHasKeg){
        if (LastKegTime == 9999){ // workaround for the first pickup of the match
@@ -167,8 +193,15 @@ simulated function Timer()
           ToNextBelt = (LastBeltTime + 55) - Level.GRI.ElapsedTime;
    }
 
-   if (Level.NetMode != NM_Client && bHasArmor)
-      ToNextArmor = (LastArmorTime + 27.5) - Level.GRI.ElapsedTime;
+   if (Level.NetMode != NM_Client && bHasArmorA)
+      ToNextArmorA = (LastArmorTimeA + 27.5) - Level.GRI.ElapsedTime;
+
+   if (Level.NetMode != NM_Client && bHasArmorB)
+      ToNextArmorB = (LastArmorTimeB + 27.5) - Level.GRI.ElapsedTime;
+      
+   if (Level.NetMode != NM_Client && bHasArmorC)
+      ToNextArmorC = (LastArmorTimeC + 27.5) - Level.GRI.ElapsedTime;
+      
 
 }
 
@@ -179,7 +212,15 @@ function Reset(){
    LastKegTime = 9999;
    LastBeltTime = 9999;
    LastUDamageTime = 9999;
-   LastArmorTime = 0;
+   LastArmorTimeA = 0;
+   LastArmorTimeB = 0;
+   LastArmorTimeC = 0;
+   ShieldPackA = None;
+   ShieldPackB = None;
+   ShieldPackC = None;
+   bHasArmorA = false;
+   bHasArmorB = false;
+   bHasArmorC = false;
 
 //   Log("LSpecReplication was reset");
 
@@ -213,7 +254,7 @@ simulated event Tick(float DeltaTime)
          ( SpecPRI.bAllow || Level.NetMode == NM_Standalone)
          ) {
       Log("[LSpec] SRI: Overlay is none, trying to spawn");
-      SpecOverlay = DuelSpecOverlay(LocalPlayer.Player.InteractionMaster.AddInteraction("LSpec_v108.DuelSpecOverlay", LocalPlayer.Player));
+      SpecOverlay = DuelSpecOverlay(LocalPlayer.Player.InteractionMaster.AddInteraction("LSpec_v115.DuelSpecOverlay", LocalPlayer.Player));
       Log("[LSpec] Overlay is now:"$SpecOverlay);
       if ( SpecOverlay != None ) {
         SpecOverlay.SpecRI = Self;
@@ -234,7 +275,9 @@ simulated function NotifyLevelChange()
   SpecOverlay = None;
   bhasKeg = False;
   bhasBelt = False;
-  bhasArmor = False;
+  bhasArmorA = False;
+  bhasArmorB = False;
+  bhasArmorC = False;
   bhasUD = False;
 }
 
@@ -275,15 +318,29 @@ static function LSpecReplicationDuel InitRI(Actor Referencer)
   return LSRD;
 }
 
+function Pawn GetPawnFor(PlayerReplicationInfo PRI){
+    local Pawn Pawn;
+
+    foreach DynamicActors(class'Pawn', Pawn){
+       Pawn.LastRenderTime = Level.TimeSeconds;
+       if (Pawn.PlayerReplicationInfo != None && Pawn.PlayerReplicationInfo == PRI)
+          return Pawn;
+    }
+}
+
 defaultproperties {
 LastKegTime = 9999;
 LastBeltTime = 9999;
 LastUDamageTime = 9999;
-LastArmorTime = 0;
+LastArmorTimeA = 0;
+LastArmorTimeB = 0;
+LastArmorTimeC = 0;
 ToNextKeg = 9999;
 ToNextBelt = 9999;
 ToNextUDamage = 9999;
-ToNextArmor = 9999;
+ToNextArmorA = 9999;
+ToNextArmorB = 9999;
+ToNextArmorC = 9999;
 }
 
 

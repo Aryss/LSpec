@@ -8,7 +8,6 @@ class SpecDataRules extends GameRules;
 
 var LSpecReplicationDuel SpecReplication;
 
-
 // ============================================================================
 // HandleRestartGame
 //
@@ -46,7 +45,7 @@ function bool OverridePickupQuery(Pawn Other, Pickup item, out byte bAllowPickup
     SpecPRI = class'LSpecUtil'.static.GetSpecPRI(Other.PlayerReplicationInfo);
 
 	if (SpecPRI != None && Level.GRI.bMatchHasBegun && !bWarmup){
-		if(item.IsA('MiniHealthPack') && Other.Health < 199) { // vial
+		if(item.IsA('MiniHealthPack') && Other.Health < 199) { 
 			SpecPRI.VialsCount += 1;
 			SpecPRI.HPTotal += 5;
 		} else if(item.IsA('HealthPack') && Other.Health < 100) {
@@ -57,9 +56,20 @@ function bool OverridePickupQuery(Pawn Other, Pickup item, out byte bAllowPickup
 			SpecPRI.HPTotal += 100;
 			SpecReplication.LastKegTime = Level.GRI.ElapsedTime;
 		} else if(item.IsA('ShieldPack') && int(Other.ShieldStrength) < 150) {
-			SpecPRI.ShieldCount += 1;
-			SpecPRI.ShieldTotal += 50;
-			SpecReplication.LastArmorTime = Level.GRI.ElapsedTime;
+            SpecPRI.ShieldCount += 1;
+			SpecPRI.ShieldTotal += ShieldPack(item).ShieldAmount;
+            if (item == SpecReplication.ShieldPackA){
+                SpecReplication.LastArmorTimeA = Level.GRI.ElapsedTime;
+//                Log(SpecReplication.ShieldPackA@"was picked up; LastArmorTimeA set to"@SpecReplication.LastArmorTimeA);
+            }
+            if (item == SpecReplication.ShieldPackB){
+                SpecReplication.LastArmorTimeB = Level.GRI.ElapsedTime;
+//                Log(SpecReplication.ShieldPackB@"was picked up; LastArmorTimeA set to"@SpecReplication.LastArmorTimeB);
+            }
+            if (item == SpecReplication.ShieldPackC){
+                SpecReplication.LastArmorTimeC = Level.GRI.ElapsedTime;
+//                Log(SpecReplication.ShieldPackC@"was picked up; LastArmorTimeA set to"@SpecReplication.LastArmorTimeC);
+            }
 		} else if(item.IsA('SuperShieldPack') && int(Other.ShieldStrength) < 150) {
 			SpecPRI.BeltCount += 1;
 			SpecPRI.ShieldTotal += 150;

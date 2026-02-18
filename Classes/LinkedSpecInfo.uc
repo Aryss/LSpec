@@ -57,7 +57,9 @@ var int hasBio,
          hasFlak,
          hasRocket,
          hasLG,
-         hasSniper;
+         hasSniper,
+         hasAR,
+         hasSG;
 
 replication
 {
@@ -67,7 +69,7 @@ replication
 		PawnShield, PawnHP, Kills,
         UDamageTime, UDTimeTotal, ShieldTotal,HPTotal,
         VialsCount, KegCount, HPCount, ShieldCount, BeltCount, UDCount,
-        curWeap, hasBio,hasASMD,hasLink,hasMini,hasFlak,hasRocket,hasLG,hasSniper,
+        curWeap, hasBio,hasASMD,hasLink,hasMini,hasFlak,hasRocket,hasLG,hasSniper,hasAR,hasSG,
         DamageLog, DamageDone, DamageRecieved, SelfDamage;
 }
 
@@ -97,7 +99,7 @@ simulated function Timer()
   local int Count;
   local byte tmpCurWeap;
   local float AmmoMax, AmmoCur;
-
+ 
   if (Level.NetMode == NM_Client || PRI == None )
      return;
 
@@ -107,10 +109,11 @@ simulated function Timer()
      LastDamageType = none;
   }
 
+  // skip obvious specs
   if ( PRI.PlayerName == "WebAdmin" || PRI.PlayerName == "DemoRecSpectator" )
      return;
 
-
+  // no pawn, let's look for one
   if (PlayerPawn == None){
     foreach AllObjects(class'Pawn', testPawn){
       if (testPawn.PlayerReplicationInfo != None && testPawn.PlayerReplicationInfo == PRI){
@@ -125,6 +128,7 @@ simulated function Timer()
     bAllow = SpecMutator.IsAllowed(PRI.PlayerName);
   }
 
+  
   tmpCurWeap = 255;
 
   if (PlayerPawn != None){
@@ -189,6 +193,18 @@ simulated function Timer()
                if(W == PlayerPawn.Weapon)
                  tmpcurWeap = 8;
             }
+            if (AssaultRifle(W) != None){
+               W.GetAmmoCount(AmmoMax,AmmoCur);
+               hasAR = AmmoCur;
+               if(W == PlayerPawn.Weapon)
+                 tmpcurWeap = 9;
+            }
+            if (ShieldGun(W) != None){
+               W.GetAmmoCount(AmmoMax,AmmoCur);
+               hasSG = AmmoCur;
+               if(W == PlayerPawn.Weapon)
+                 tmpcurWeap = 10;
+            }            
             curWeap = tmpcurWeap;
         }
 
