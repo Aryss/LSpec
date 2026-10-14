@@ -31,6 +31,8 @@ While it makes joining a server more complex, you can work around this by making
 ### Controls
 Y - Swaps left and right player (to keep positions the same between matches), of course swaps all the data as well
 
+U - Cycles through 3 modes to display currently viewed player name: alternating to the side, in the middle of the screen, at the top by the name
+
 I - Show extra stats: Kills, Suicides, Ping, Packet Loss
 
 < - Increases/resets left player score. Score is saved locally on the client and persists between matches/sessions
