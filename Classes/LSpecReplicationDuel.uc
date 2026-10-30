@@ -20,6 +20,7 @@ var int ToNextArmorA,
         ToNextArmorB,
         ToNextArmorC;
 var float MatchStartTime;
+var bool bRestoredHUD;
 var bool bOvertime;
 var bool bHasArmorA,
          bHasArmorB,
@@ -63,19 +64,58 @@ function MatchStarting(){
   local bool bUTCompEnabled;
   local array<string> tmp1, tmp2;
   local Mutator Mut;
+  local string UTCompName, inOpt, leftOpt;
+  local int pos;
+  
 
-  foreach DynamicActors(class'Mutator',Mut)
-  {
-    if (Left(Mut.FriendlyName, 6) ~= "UTComp")
-       bUTCompEnabled = True;
+  if (Level.NetMode != NM_Client){
+    MatchStartTime = Level.GRI.ElapsedTime;
+    
+    // an extremely roundabout way to check if DD is disabled in UTComp without 
+    // adding UTComp as a dependency, courtesy of stock mutator loading code
+    //
+    // - grab level options
+    // - find mutators and check for any with package name starting with UTComp
+    // - pull full package.classname for UTComp
+    // - uses that full name to get the value for DD through get console command
+    
+    leftOpt = Level.GetLocalURL();
+    pos = InStr(leftOpt,"?");
+    
+    if (pos > 0){
+        InOpt = Right(leftOpt, Len(leftOpt) - pos);
+    }
+    
+    InOpt = Level.Game.ParseOption(inOpt, "Mutator");
+
+    if ( InOpt != "" )
+      {
+        while ( InOpt != "" )
+        {
+            pos = InStr(InOpt,",");
+            if ( pos > 0 )
+            {
+                LeftOpt = Left(InOpt, pos);
+                InOpt = Right(InOpt, Len(InOpt) - pos - 1);
+            }
+            else
+            {
+                LeftOpt = InOpt;
+                InOpt = "";
+            }
+            
+            if (Left(LeftOpt, 6) ~= "UTComp"){
+                UTCompName = LeftOpt;
+                bUTCompEnabled = True;
+                Log("[LSpec] UTComp detected: "@LeftOpt);
+            }
+        }        
+     }  
   }
-
-  if (Level.NetMode != NM_Client);
-     MatchStartTime = Level.GRI.ElapsedTime;
-
+     
   Reset();
-
-  bUDDisabled = bUTCompEnabled && !bool(ConsoleCommand("get MutUTComp bEnableDoubleDamage"));
+  bUDDisabled = true;
+  bUDDisabled = bUTCompEnabled && !bool(ConsoleCommand("get "$UTCompName$" bEnableDoubleDamage"));  
 
   Split(Level,".",tmp1);
 
@@ -164,6 +204,13 @@ simulated function Timer()
         		}
         	}
          }
+       }
+       if ( !LocalPlayer.PlayerReplicationInfo.bOnlySpectator && !bRestoredHUD) {
+         LocalPlayer.myHUD.bHideHUD = false;
+         LocalPlayer.myHUD.bCrosshairShow = true;
+         bRestoredHUD = True;
+         Log("[LSpec] restoring HUD from LSRI");
+         Log("[LSpec] bHideHUD:"@LocalPlayer.myHUD.bHideHUD);
        }
 
    }
@@ -254,7 +301,7 @@ simulated event Tick(float DeltaTime)
          ( SpecPRI.bAllow || Level.NetMode == NM_Standalone)
          ) {
       Log("[LSpec] SRI: Overlay is none, trying to spawn");
-      SpecOverlay = DuelSpecOverlay(LocalPlayer.Player.InteractionMaster.AddInteraction("LSpec_v115.DuelSpecOverlay", LocalPlayer.Player));
+      SpecOverlay = DuelSpecOverlay(LocalPlayer.Player.InteractionMaster.AddInteraction("LSpec_v121.DuelSpecOverlay", LocalPlayer.Player));
       Log("[LSpec] Overlay is now:"$SpecOverlay);
       if ( SpecOverlay != None ) {
         SpecOverlay.SpecRI = Self;

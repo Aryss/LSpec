@@ -51,11 +51,11 @@ function bool OverridePickupQuery(Pawn Other, Pickup item, out byte bAllowPickup
 		} else if(item.IsA('HealthPack') && Other.Health < 100) {
 			SpecPRI.HPCount += 1;
 			SpecPRI.HPTotal += 25;
-		} else if(item.IsA('SuperHealthPack') && Other.Health < 199) {
-			SpecPRI.KegCount += 1;
-			SpecPRI.HPTotal += 100;
+		} else if(item.IsA('SuperHealthPack')) {
+            SpecPRI.KegCount += 1;
+            SpecPRI.HPTotal += 100;
 			SpecReplication.LastKegTime = Level.GRI.ElapsedTime;
-		} else if(item.IsA('ShieldPack') && int(Other.ShieldStrength) < 150) {
+		} else if(item.IsA('ShieldPack')) {
             SpecPRI.ShieldCount += 1;
 			SpecPRI.ShieldTotal += ShieldPack(item).ShieldAmount;
             if (item == SpecReplication.ShieldPackA){
@@ -70,7 +70,7 @@ function bool OverridePickupQuery(Pawn Other, Pickup item, out byte bAllowPickup
                 SpecReplication.LastArmorTimeC = Level.GRI.ElapsedTime;
 //                Log(SpecReplication.ShieldPackC@"was picked up; LastArmorTimeA set to"@SpecReplication.LastArmorTimeC);
             }
-		} else if(item.IsA('SuperShieldPack') && int(Other.ShieldStrength) < 150) {
+		} else if(item.IsA('SuperShieldPack')) {
 			SpecPRI.BeltCount += 1;
 			SpecPRI.ShieldTotal += 150;
 			SpecReplication.LastBeltTime = Level.GRI.ElapsedTime;

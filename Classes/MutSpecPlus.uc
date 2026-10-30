@@ -29,10 +29,10 @@ function PostBeginPlay()
 }
 
 static function FillPlayInfo(PlayInfo PlayInfo)
-{
-	Super.FillPlayInfo(PlayInfo);
-
+{	
     PlayInfo.AddSetting("Spec Plus",    		 "Pass",               "Overlay Password",  1, 1,  "Text", "40");
+    PlayInfo.PopClass();
+    super.FillPlayInfo(PlayInfo);    
 }
 
 function GetServerDetails(out GameInfo.ServerResponseLine ServerState)
@@ -45,7 +45,7 @@ function GetServerDetails(out GameInfo.ServerResponseLine ServerState)
 
    	ServerState.ServerInfo.Length = i+1;
 	ServerState.ServerInfo[i].Key = "SpecPlus version";
-	ServerState.ServerInfo[i++].Value = "v1.15";
+	ServerState.ServerInfo[i++].Value = "v1.21";
 }
 
 static event string GetDescriptionText(string PropName)
@@ -165,7 +165,7 @@ function bool InStrNonCaseSensitive(String S, string S2)
 
 DefaultProperties
 {
- FriendlyName="SpecPlus v1.15"
+ FriendlyName="SpecPlus v1.21"
  Pass=""
  PassDescText="Overlay Password"
 }
